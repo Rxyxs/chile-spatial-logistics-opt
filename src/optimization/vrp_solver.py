@@ -225,14 +225,19 @@ def main() -> None:
     depot = (depot_row["centroid_lat"], depot_row["centroid_lon"])
     demand_cells = h3_agg[h3_agg["h3_cell"] != depot_row["h3_cell"]].reset_index(drop=True)
 
-    instance = build_instance_from_h3(demand_cells, depot, num_vehicles=4, vehicle_capacity=120)
-    solution = solve_vrp(instance)
+    # Capacidad total (vehiculos x capacidad) debe cubrir la demanda agregada
+    # con margen; para el dataset por defecto (~130 celdas H3, ~900 unidades)
+    # 6 furgones x 200 unidades entrega holgura suficiente.
+    instance = build_instance_from_h3(
+        demand_cells, depot, num_vehicles=6, vehicle_capacity=200, open_min=0, close_min=480
+    )
+    solution = solve_vrp(instance, time_limit_seconds=30)
 
     if solution is None:
         print("No se encontro una solucion factible.")
         return
 
-    print(f"Deposito (Dark Store): {depot}")
+    print(f"Deposito (Dark Store): ({float(depot[0]):.5f}, {float(depot[1]):.5f})")
     print(f"Distancia total: {solution.total_distance_km} km")
     for route in solution.routes:
         print(

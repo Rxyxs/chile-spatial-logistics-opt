@@ -111,8 +111,8 @@ def main() -> None:
         n_per_comuna = st.slider("Pedidos por comuna", 10, 100, 40, step=5)
         seed = st.number_input("Semilla aleatoria", value=42, step=1)
         n_dark_stores = st.slider("Candidatos a Dark Store", 1, 5, 1)
-        num_vehicles = st.slider("Numero de furgones", 1, 10, 4)
-        vehicle_capacity = st.slider("Capacidad por furgon (unidades)", 20, 300, 120, step=10)
+        num_vehicles = st.slider("Numero de furgones", 1, 15, 8)
+        vehicle_capacity = st.slider("Capacidad por furgon (unidades)", 20, 300, 150, step=10)
         run_optimization = st.button("🧭 Optimizar rutas", type="primary")
 
     gdf, h3_agg = load_demand(n_per_comuna, seed)
