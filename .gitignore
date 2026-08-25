@@ -22,3 +22,7 @@ data/raw/*
 .vscode/
 .idea/
 .DS_Store
+
+# Internal notes / assistant config (not for publication)
+CLAUDE.md
+.claude/
