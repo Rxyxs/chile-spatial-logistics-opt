@@ -17,12 +17,14 @@ import h3
 import pandas as pd
 from shapely.geometry import Point, Polygon
 
+from src.spatial.comunas import load_target_comunas
+
 # Centro aproximado (lat, lon) y radio efectivo (km) de cada comuna.
 COMUNAS: dict[str, dict[str, float]] = {
     "Las Condes": {"lat": -33.4089, "lon": -70.5693, "radius_km": 4.0},
     "Providencia": {"lat": -33.4314, "lon": -70.6093, "radius_km": 2.0},
     "Santiago Centro": {"lat": -33.4372, "lon": -70.6506, "radius_km": 2.5},
-    "Maipu": {"lat": -33.5111, "lon": -70.7580, "radius_km": 4.5},
+    "Maipú": {"lat": -33.5111, "lon": -70.7580, "radius_km": 4.5},
     "San Bernardo": {"lat": -33.5928, "lon": -70.6997, "radius_km": 3.5},
 }
 
@@ -72,6 +74,57 @@ def generate_synthetic_demand(
                     "demand": rng.randint(min_demand, max_demand),
                 }
             )
+            order_id += 1
+
+    df = pd.DataFrame.from_records(records)
+    geometry = [Point(lon, lat) for lat, lon in zip(df["lat"], df["lon"])]
+    return gpd.GeoDataFrame(df, geometry=geometry, crs="EPSG:4326")
+
+
+def _random_point_in_polygon(polygon, rng: random.Random, max_attempts: int = 200) -> Point:
+    """Rejection sampling: sortea puntos uniformes dentro del bounding box
+    del polígono hasta que uno caiga realmente dentro de él. Correcto para
+    polígonos irregulares (a diferencia de un círculo aproximado, donde un
+    punto "dentro del círculo" puede en realidad caer fuera de los límites
+    reales de la comuna, p.ej. en la comuna vecina)."""
+    minx, miny, maxx, maxy = polygon.bounds
+    for _ in range(max_attempts):
+        candidate = Point(rng.uniform(minx, maxx), rng.uniform(miny, maxy))
+        if polygon.contains(candidate):
+            return candidate
+    raise RuntimeError(f"No se logró samplear un punto dentro del polígono tras {max_attempts} intentos")
+
+
+def generate_demand_within_polygons(
+    comunas_gdf: gpd.GeoDataFrame | None = None,
+    n_per_comuna: int = 40,
+    seed: int = 42,
+    min_demand: int = 1,
+    max_demand: int = 8,
+    comuna_column: str = "comuna",
+) -> gpd.GeoDataFrame:
+    """Igual que `generate_synthetic_demand`, pero clippeando los puntos a
+    polígonos **reales** de comuna (`src/spatial/comunas.py`) en vez de un
+    círculo aproximado alrededor de un centro. Cada punto generado está
+    garantizado de caer dentro del límite administrativo real de su comuna.
+    """
+    comunas_gdf = comunas_gdf if comunas_gdf is not None else load_target_comunas()
+    rng = random.Random(seed)
+
+    records = []
+    order_id = 0
+    for _, comuna_row in comunas_gdf.iterrows():
+        comuna_name = comuna_row[comuna_column]
+        polygon = comuna_row.geometry
+        for _ in range(n_per_comuna):
+            point = _random_point_in_polygon(polygon, rng)
+            records.append({
+                "order_id": order_id,
+                "comuna": comuna_name,
+                "lat": point.y,
+                "lon": point.x,
+                "demand": rng.randint(min_demand, max_demand),
+            })
             order_id += 1
 
     df = pd.DataFrame.from_records(records)

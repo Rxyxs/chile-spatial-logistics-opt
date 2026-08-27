@@ -1,11 +1,14 @@
+import geopandas as gpd
 import h3
 import pytest
 
+from src.spatial.comunas import load_target_comunas
 from src.spatial.geo_generator import (
     COMUNAS,
     H3_RESOLUTION,
     aggregate_by_h3,
     assign_h3_index,
+    generate_demand_within_polygons,
     generate_synthetic_demand,
     select_dark_store_candidates,
 )
@@ -54,3 +57,32 @@ def test_select_dark_store_candidates_orders_by_demand(demand_gdf):
     candidates = select_dark_store_candidates(h3_agg, n_stores=3)
     assert len(candidates) == 3
     assert candidates["total_demand"].is_monotonic_decreasing
+
+
+# --- generate_demand_within_polygons: clipping a poligonos reales ---------
+
+
+@pytest.fixture(scope="module")
+def polygon_demand_gdf():
+    comunas = load_target_comunas()
+    return generate_demand_within_polygons(comunas, n_per_comuna=15, seed=1)
+
+
+def test_polygon_demand_expected_row_count(polygon_demand_gdf):
+    assert len(polygon_demand_gdf) == 15 * len(COMUNAS)
+
+
+def test_every_point_is_truly_inside_its_comuna_polygon(polygon_demand_gdf):
+    """The whole point of using real polygons instead of circles: every
+    generated point must fall inside the *real* boundary of the comuna it
+    was assigned to -- not just "close to the comuna center"."""
+    comunas = load_target_comunas()
+    joined = gpd.sjoin(
+        polygon_demand_gdf, comunas[["comuna", "geometry"]],
+        how="left", predicate="within", lsuffix="pt", rsuffix="poly",
+    )
+    assert (joined["comuna_pt"] == joined["comuna_poly"]).all()
+
+
+def test_polygon_demand_all_comunas_present(polygon_demand_gdf):
+    assert set(polygon_demand_gdf["comuna"]) == set(COMUNAS)

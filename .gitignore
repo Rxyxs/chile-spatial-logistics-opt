@@ -17,8 +17,24 @@ data/processed/*.geojson
 !data/processed/.gitkeep
 data/raw/*
 !data/raw/.gitkeep
+# Excepcion: el subconjunto real de poligonos de comunas SI queda versionado
+# (pequeno, ~25KB, y el pipeline principal lo necesita para correr offline);
+# el download completo de las 52 comunas de la RM (~400KB) es un intermedio
+# regenerable via `python -m src.spatial.comunas` y no se versiona.
+!data/raw/comunas_rm_subset.geojson
+data/raw/_rm_comunas_full.geojson
+
+# Mapas HTML exportados (regenerables via src/spatial/map_export.py) --
+# se versionan solo los dos ejemplos de referencia generados por el notebook
+outputs/maps/*.html
+!outputs/maps/multidepot_folium.html
+!outputs/maps/multidepot_pydeck.html
 
 # Editor / OS
 .vscode/
 .idea/
 .DS_Store
+
+# Configuracion interna de asistentes de IA
+CLAUDE.md
+.claude/
