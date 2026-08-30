@@ -18,6 +18,16 @@ Sistema de Inteligencia Geoespacial para optimizar la ubicación de **Dark Store
 
 **Fase 2** (esta actualización) reemplaza tres de las simplificaciones que la propia Fase 1 documentaba como pendientes: polígonos reales de comuna en vez de círculos, una matriz de distancias por red vial simulada en vez de línea recta, y un VRPTW multi-depósito genuino resuelto conjuntamente en vez de un depósito a la vez — más exportación de mapas HTML standalone (Folium + Pydeck) y un notebook de evaluación complementario.
 
+## 0.1 Impacto de Negocio e Indicadores Clave (KPIs)
+
+| Métrica | Resultado | Qué significa |
+|---|---|---|
+| VRPTW multi-depósito, celdas de demanda sin asignar | **0** / 173 | Cada celda H3 de demanda servida, asignación depósito-vehículo-parada optimizada conjuntamente |
+| Utilización de flota | 8 / 9 vehículos usados | Distancia total de ruta simulada: 503,90 km |
+| Speedup de la matriz de distancias Haversine | **28,7x** (43,49ms → 1,51ms) | NumPy vectorizado vs. loop puro en Python, medido no afirmado |
+| Polígonos reales de comuna | 5 comunas, 225 puntos de demanda | Muestreo por rechazo para que cada punto caiga genuinamente dentro de su polígono real, no un bounding box |
+| Suite de tests | 40/40 pasando | Duplicado desde los 13 tests de la Fase 1, cubre contención de polígonos, invariantes de distancia por red y asignación multi-depósito |
+
 ## 1. Arquitectura
 
 ```mermaid

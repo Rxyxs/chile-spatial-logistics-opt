@@ -18,6 +18,16 @@ Geospatial intelligence system for **Dark Store** siting and **last-mile deliver
 
 **Phase 2** (this update) replaces three of Phase 1's own documented simplifications with the real thing: real comuna polygons instead of circles, a simulated road-network distance matrix instead of straight-line distance, and a genuine multi-depot VRPTW solved jointly instead of one depot at a time — plus standalone HTML map export (Folium + Pydeck) and a companion evaluation notebook.
 
+## 0.1 Business Impact & Key Performance Indicators
+
+| Metric | Result | What it means |
+|---|---|---|
+| Multi-depot VRPTW, unassigned demand cells | **0** / 173 | Every H3 demand cell served, jointly optimized vehicle-to-depot-to-stop assignment |
+| Fleet utilization | 8 / 9 vehicles used | Total simulated route distance: 503.90 km |
+| Haversine distance-matrix speedup | **28.7x** (43.49ms → 1.51ms) | Vectorized NumPy vs. pure-Python loop, measured not claimed |
+| Real comuna polygons | 5 comunas, 225 demand points | Rejection-sampled so every point genuinely falls inside its real polygon, not a bounding box |
+| Test suite | 40/40 passing | Doubled from Phase 1's 13 tests to cover polygon containment, network-distance invariants, and multi-depot assignment |
+
 ## 1. Architecture
 
 ```mermaid
