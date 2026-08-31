@@ -13,3 +13,6 @@ jupyter>=1.0.0
 nbconvert>=7.16.0
 ipykernel>=6.29.0
 matplotlib>=3.8.0
+scikit-learn>=1.4.0
+torch>=2.2.0
+duckdb>=0.10.0
