@@ -192,6 +192,9 @@ Every number below comes from an actual run of `python -m src.prediction.demand_
 | PyTorch MLP -- Swish (SiLU) | 2.97 | 4.54 | 0.01 |
 
 ![Model comparison](outputs/plots/demand_model_comparison.png)
+The animated version below traces the loss curves epoch by epoch, with a floating label tracking each activation's current loss.
+
+![Activation convergence animated](outputs/plots/mlp_activation_convergence_animated.gif)
 ![Activation convergence](outputs/plots/mlp_activation_convergence.png)
 ![Actual vs predicted](outputs/plots/demand_actual_vs_predicted.png)
 

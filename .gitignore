@@ -33,9 +33,11 @@ outputs/maps/*.html
 # Graficos de prediccion de demanda (regenerables via src/prediction/demand_forecast.py)
 # -- se versionan solo los 3 ejemplos de referencia usados en el README
 outputs/plots/*.png
+outputs/plots/*.gif
 !outputs/plots/demand_model_comparison.png
 !outputs/plots/mlp_activation_convergence.png
 !outputs/plots/demand_actual_vs_predicted.png
+!outputs/plots/mlp_activation_convergence_animated.gif
 
 # Base DuckDB de metricas (regenerable, local)
 outputs/metrics/*.duckdb

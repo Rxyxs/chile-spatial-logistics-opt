@@ -10,6 +10,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.animation import FuncAnimation
 
 PLOTS_DIR = Path(__file__).resolve().parents[2] / "outputs" / "plots"
 
@@ -80,6 +81,74 @@ def plot_activation_curves(results: dict, out_path: Path | None = None) -> Path:
     return out_path
 
 
+def plot_activation_curves_animated(results: dict, out_path: Path | None = None) -> Path:
+    """Version animada (GIF) de la convergencia del MLP: linea de carrera con
+    etiqueta flotante que muestra la loss actual de cada activacion.
+
+    Usa exactamente los mismos `loss_histories` reales que
+    `plot_activation_curves`; solo se subdivide la cantidad de cuadros.
+    """
+    out_path = out_path or (PLOTS_DIR / "mlp_activation_convergence_animated.gif")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    histories = {act: list(h) for act, h in results["loss_histories"].items()}
+    n_epochs = max(len(h) for h in histories.values())
+
+    n_frames = min(50, n_epochs)
+    # Indices reales (sin inventar valores) subsampleados a lo sumo a n_frames.
+    frame_epochs = sorted(set(np.linspace(1, n_epochs, n_frames, dtype=int)))
+
+    with plt.style.context("dark_background"):
+        fig, ax = plt.subplots(figsize=(12, 6))
+        ax.set_xlim(1, n_epochs)
+        all_losses = [v for h in histories.values() for v in h]
+        ax.set_ylim(min(all_losses) * 0.95, max(all_losses) * 1.05)
+        ax.set_xlabel("Epoca")
+        ax.set_ylabel("Loss (asimetrica de stockout)")
+        ax.set_title("Convergencia del MLP por funcion de activacion (animado)")
+
+        lines = {}
+        labels = {}
+        for activation, history in histories.items():
+            color = ACTIVATION_COLORS.get(activation, "#33cccc")
+            (line,) = ax.plot([], [], color=color, linewidth=2, label=activation)
+            lines[activation] = line
+            labels[activation] = ax.annotate(
+                "",
+                xy=(1, history[0]),
+                xytext=(10, 0),
+                textcoords="offset points",
+                color="black",
+                fontsize=9,
+                fontweight="bold",
+                va="center",
+                bbox=dict(boxstyle="round,pad=0.3", fc=color, ec="none", alpha=0.9),
+            )
+        ax.legend(loc="upper right")
+        fig.tight_layout()
+
+        def update(frame_idx):
+            epoch = frame_epochs[frame_idx]
+            artists = []
+            for activation, history in histories.items():
+                x = list(range(1, epoch + 1))
+                y = history[:epoch]
+                lines[activation].set_data(x, y)
+                current = history[epoch - 1]
+                labels[activation].set_position((10, 0))
+                labels[activation].xy = (epoch, current)
+                labels[activation].set_text(f"{activation}: {current:.3f}")
+                artists.append(lines[activation])
+                artists.append(labels[activation])
+            return artists
+
+        ani = FuncAnimation(fig, update, frames=len(frame_epochs), interval=120, blit=False)
+        ani.save(out_path, writer="pillow")
+        plt.close(fig)
+
+    return out_path
+
+
 def plot_actual_vs_predicted(results: dict, out_path: Path | None = None) -> Path:
     """Dispersión real vs. predicho para el mejor modelo (menor MAE)."""
     out_path = out_path or (PLOTS_DIR / "demand_actual_vs_predicted.png")
@@ -107,5 +176,6 @@ def plot_all(results: dict) -> list[Path]:
     return [
         plot_model_comparison(results),
         plot_activation_curves(results),
+        plot_activation_curves_animated(results),
         plot_actual_vs_predicted(results),
     ]

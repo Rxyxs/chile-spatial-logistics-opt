@@ -192,6 +192,9 @@ Todos los números de abajo vienen de una corrida real de `python -m src.predict
 | MLP PyTorch -- Swish (SiLU) | 2,97 | 4,54 | 0,01 |
 
 ![Comparación de modelos](outputs/plots/demand_model_comparison.png)
+La version animada traza las curvas de loss epoca a epoca, con una etiqueta flotante que sigue la loss actual de cada activacion.
+
+![Convergencia por activación animada](outputs/plots/mlp_activation_convergence_animated.gif)
 ![Convergencia por activación](outputs/plots/mlp_activation_convergence.png)
 ![Real vs. predicho](outputs/plots/demand_actual_vs_predicted.png)
 
