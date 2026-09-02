@@ -46,3 +46,8 @@ outputs/metrics/*.duckdb
 .vscode/
 .idea/
 .DS_Store
+
+# Folium/Pydeck maps embed their JS libraries inline; even at a few hundred KB
+# each they were enough to make GitHub misdetect this repo's primary language
+# as HTML instead of Python/Jupyter. Regenerate locally from the notebooks.
+outputs/maps/
