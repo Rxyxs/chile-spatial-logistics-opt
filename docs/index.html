@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🚚 Chile Spatial Logistics Optimizer</title>
+<meta name="description" content="Geospatial intelligence system for **Dark Store** siting and **last-mile delivery** route optimization in Santiago, Chile&#x27;s Metropolitan Region.">
+<style>
+  :root { --bg:#FBFAF8; --surface:#FFF; --ink:#23201D; --muted:#6B645D; --line:#E3DED7; --accent:#B5553D; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg:#171614; --surface:#201E1B; --ink:#EDE9E3; --muted:#A9A29A; --line:#322E2A; --accent:#D9765C; } }
+  :root[data-theme="dark"] { --bg:#171614; --surface:#201E1B; --ink:#EDE9E3; --muted:#A9A29A; --line:#322E2A; --accent:#D9765C; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.68 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:900px; margin:0 auto; padding:0 16px 88px; }
+  header { padding:60px 0 32px; border-bottom:1px solid var(--line); margin-bottom:36px; }
+  h1 { font-size:clamp(1.7rem,5vw,2.4rem); line-height:1.16; margin:0 0 18px; letter-spacing:-.02em; }
+  .lede { font-size:clamp(1rem,2.3vw,1.1rem); color:var(--muted); margin:0 0 22px; max-width:62ch; }
+  .lede strong { color:var(--ink); }
+  .links a { display:inline-block; margin:0 9px 9px 0; padding:9px 15px; border:1px solid var(--line);
+    border-radius:7px; text-decoration:none; color:var(--ink); background:var(--surface); font-size:.9rem;
+    transition:border-color .15s; }
+  .links a:hover { border-color:var(--accent); }
+  h2 { font-size:1.3rem; margin:48px 0 8px; padding-top:12px; border-top:1px solid var(--line); letter-spacing:-.01em; }
+  figure { margin:22px 0; }
+  figure img { width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:9px; background:#fff; }
+  figcaption { font-size:.85rem; color:var(--muted); margin-top:9px; max-width:70ch; }
+  p { margin:0 0 16px; max-width:70ch; }
+  code { background:var(--surface); border:1px solid var(--line); border-radius:4px; padding:1px 5px; font-size:.86em;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
+  footer { margin-top:60px; padding-top:22px; border-top:1px solid var(--line); font-size:.86rem; color:var(--muted); }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>🚚 Chile Spatial Logistics Optimizer</h1>
+<p class="lede">Geospatial intelligence system for <strong>Dark Store</strong> siting and <strong>last-mile delivery</strong> route optimization in Santiago, Chile&#x27;s Metropolitan Region.</p>
+<div class="links">
+<a href="https://github.com/Rxyxs/chile-spatial-logistics-opt">Code and method</a>
+<a href="https://github.com/Rxyxs/chile-spatial-logistics-opt#readme">Full README</a>
+</div></header>
+<p>This page shows the project's results. The methodology, the design decisions and the limitations are documented in the repository's README.</p>
+<h2>6.1 Demand forecasting (Phase 3) -- model comparison</h2>
+<figure>
+<img src="figures/demand_model_comparison.png" alt="Model comparison" loading="lazy">
+<figcaption>The animated version below traces the loss curves epoch by epoch, with a floating label tracking each activation&#x27;s current loss.</figcaption>
+</figure>
+<figure>
+<img src="figures/mlp_activation_convergence_animated.gif" alt="Activation convergence animated" loading="lazy">
+<figcaption><strong>Honest note on forecasting accuracy</strong>: R² near zero across all five models is the correct, un-massaged result here — <code>total_demand</code> in the synthetic generator is drawn independently of location (<code>rng.randint(min_demand, max_demand)</code> per order, uncorrelated with comuna or coordinates by construction), so there is little real spatial signal to learn from location alone. The comparison is still meaningful as a <strong>methodology demonstration</strong> — three genuinely different model families, a domain-specific asymmetric loss, and an honest activation comparison — that would show a real accuracy gap on demand data with actual spatial structure (seasonality, comuna-level income/population correlates, proximity to transit), which this synthetic generator doesn&#x27;t model.</figcaption>
+</figure>
+<figure>
+<img src="figures/mlp_activation_convergence.png" alt="Activation convergence" loading="lazy">
+<figcaption><strong>Honest note on forecasting accuracy</strong>: R² near zero across all five models is the correct, un-massaged result here — <code>total_demand</code> in the synthetic generator is drawn independently of location (<code>rng.randint(min_demand, max_demand)</code> per order, uncorrelated with comuna or coordinates by construction), so there is little real spatial signal to learn from location alone. The comparison is still meaningful as a <strong>methodology demonstration</strong> — three genuinely different model families, a domain-specific asymmetric loss, and an honest activation comparison — that would show a real accuracy gap on demand data with actual spatial structure (seasonality, comuna-level income/population correlates, proximity to transit), which this synthetic generator doesn&#x27;t model.</figcaption>
+</figure>
+<figure>
+<img src="figures/demand_actual_vs_predicted.png" alt="Actual vs predicted" loading="lazy">
+<figcaption><strong>Honest note on forecasting accuracy</strong>: R² near zero across all five models is the correct, un-massaged result here — <code>total_demand</code> in the synthetic generator is drawn independently of location (<code>rng.randint(min_demand, max_demand)</code> per order, uncorrelated with comuna or coordinates by construction), so there is little real spatial signal to learn from location alone. The comparison is still meaningful as a <strong>methodology demonstration</strong> — three genuinely different model families, a domain-specific asymmetric loss, and an honest activation comparison — that would show a real accuracy gap on demand data with actual spatial structure (seasonality, comuna-level income/population correlates, proximity to transit), which this synthetic generator doesn&#x27;t model.</figcaption>
+</figure>
+<footer>
+Pablo Reyes · <a href="https://github.com/Rxyxs/chile-spatial-logistics-opt">github.com/Rxyxs/chile-spatial-logistics-opt</a> · MIT<br><br>
+Every figure on this page is produced by the repository's pipeline. For the full method and its limitations, see the README.
+</footer>
+</div></body></html>
