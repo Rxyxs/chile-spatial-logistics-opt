@@ -1,4 +1,4 @@
-[ 🇺🇸 English ] | [ 🇨🇱 [Español](README.es.md) ]
+[English ] | [[Español](README.es.md) ]
 
 # 🚚 Chile Spatial Logistics Optimizer
 
