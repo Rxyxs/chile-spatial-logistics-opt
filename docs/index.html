@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>🚚 Chile Spatial Logistics Optimizer</title>
-<meta name="description" content="Geospatial intelligence system for **Dark Store** siting and **last-mile delivery** route optimization in Santiago, Chile&#x27;s Metropolitan Region.">
+<meta name="description" content="Geospatial intelligence system for Dark Store siting and last-mile delivery route optimization in Santiago, Chile&#x27;s Metropolitan Region.">
 <style>
   :root { --bg:#FBFAF8; --surface:#FFF; --ink:#23201D; --muted:#6B645D; --line:#E3DED7; --accent:#B5553D; }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
@@ -51,15 +51,15 @@
 </figure>
 <figure>
 <img src="figures/mlp_activation_convergence_animated.gif" alt="Activation convergence animated" loading="lazy">
-<figcaption><strong>Honest note on forecasting accuracy</strong>: R² near zero across all five models is the correct, un-massaged result here — <code>total_demand</code> in the synthetic generator is drawn independently of location (<code>rng.randint(min_demand, max_demand)</code> per order, uncorrelated with comuna or coordinates by construction), so there is little real spatial signal to learn from location alone. The comparison is still meaningful as a <strong>methodology demonstration</strong> — three genuinely different model families, a domain-specific asymmetric loss, and an honest activation comparison — that would show a real accuracy gap on demand data with actual spatial structure (seasonality, comuna-level income/population correlates, proximity to transit), which this synthetic generator doesn&#x27;t model.</figcaption>
+<figcaption><strong>Honest note on forecasting accuracy</strong>: R² near zero across all five models is the correct, un-massaged result here — <code>total_demand</code> in the synthetic generator is drawn independently of location (<code>rng.randint(min_demand, max_demand)</code> per order, uncorrelated with comuna or coordinates by construction), so there is little real spatial signal to learn from location alone.</figcaption>
 </figure>
 <figure>
 <img src="figures/mlp_activation_convergence.png" alt="Activation convergence" loading="lazy">
-<figcaption><strong>Honest note on forecasting accuracy</strong>: R² near zero across all five models is the correct, un-massaged result here — <code>total_demand</code> in the synthetic generator is drawn independently of location (<code>rng.randint(min_demand, max_demand)</code> per order, uncorrelated with comuna or coordinates by construction), so there is little real spatial signal to learn from location alone. The comparison is still meaningful as a <strong>methodology demonstration</strong> — three genuinely different model families, a domain-specific asymmetric loss, and an honest activation comparison — that would show a real accuracy gap on demand data with actual spatial structure (seasonality, comuna-level income/population correlates, proximity to transit), which this synthetic generator doesn&#x27;t model.</figcaption>
+<figcaption><strong>Honest note on forecasting accuracy</strong>: R² near zero across all five models is the correct, un-massaged result here — <code>total_demand</code> in the synthetic generator is drawn independently of location (<code>rng.randint(min_demand, max_demand)</code> per order, uncorrelated with comuna or coordinates by construction), so there is little real spatial signal to learn from location alone.</figcaption>
 </figure>
 <figure>
 <img src="figures/demand_actual_vs_predicted.png" alt="Actual vs predicted" loading="lazy">
-<figcaption><strong>Honest note on forecasting accuracy</strong>: R² near zero across all five models is the correct, un-massaged result here — <code>total_demand</code> in the synthetic generator is drawn independently of location (<code>rng.randint(min_demand, max_demand)</code> per order, uncorrelated with comuna or coordinates by construction), so there is little real spatial signal to learn from location alone. The comparison is still meaningful as a <strong>methodology demonstration</strong> — three genuinely different model families, a domain-specific asymmetric loss, and an honest activation comparison — that would show a real accuracy gap on demand data with actual spatial structure (seasonality, comuna-level income/population correlates, proximity to transit), which this synthetic generator doesn&#x27;t model.</figcaption>
+<figcaption><strong>Honest note on forecasting accuracy</strong>: R² near zero across all five models is the correct, un-massaged result here — <code>total_demand</code> in the synthetic generator is drawn independently of location (<code>rng.randint(min_demand, max_demand)</code> per order, uncorrelated with comuna or coordinates by construction), so there is little real spatial signal to learn from location alone.</figcaption>
 </figure>
 <footer>
 Pablo Reyes · <a href="https://github.com/Rxyxs/chile-spatial-logistics-opt">github.com/Rxyxs/chile-spatial-logistics-opt</a> · MIT<br><br>
