@@ -1,0 +1,639 @@
+{
+  "population_sources": [
+    {
+      "comuna": "Las Condes",
+      "cells": 80,
+      "kontur": 297424.0,
+      "censo_2017": 294838,
+      "kontur_vs_censo_pct": 0.8770918266980621
+    },
+    {
+      "comuna": "Maipú",
+      "cells": 158,
+      "kontur": 956350.0,
+      "censo_2017": 521627,
+      "kontur_vs_censo_pct": 83.33981944953001
+    },
+    {
+      "comuna": "Providencia",
+      "cells": 23,
+      "kontur": 129962.0,
+      "censo_2017": 142079,
+      "kontur_vs_censo_pct": -8.528353943932599
+    },
+    {
+      "comuna": "San Bernardo",
+      "cells": 215,
+      "kontur": 358666.0,
+      "censo_2017": 301313,
+      "kontur_vs_censo_pct": 19.034359619399098
+    },
+    {
+      "comuna": "Santiago Centro",
+      "cells": 36,
+      "kontur": 154765.0,
+      "censo_2017": 404495,
+      "kontur_vs_censo_pct": -61.7387112325245
+    }
+  ],
+  "demand": {
+    "total_units": 1025,
+    "synthetic": {
+      "cells": 173,
+      "comuna_share": {
+        "Las Condes": 0.238,
+        "Maipú": 0.1912,
+        "Providencia": 0.1717,
+        "San Bernardo": 0.2107,
+        "Santiago Centro": 0.1883
+      }
+    },
+    "real_census_calibrated": {
+      "cells": 294,
+      "comuna_share": {
+        "Las Condes": 0.1785,
+        "Maipú": 0.3122,
+        "Providencia": 0.0868,
+        "San Bernardo": 0.1785,
+        "Santiago Centro": 0.2439
+      }
+    },
+    "real_kontur_raw": {
+      "cells": 297,
+      "comuna_share": {
+        "Las Condes": 0.162,
+        "Maipú": 0.5054,
+        "Providencia": 0.0673,
+        "San Bernardo": 0.1824,
+        "Santiago Centro": 0.0829
+      }
+    }
+  },
+  "depots": {
+    "synthetic": [
+      {
+        "h3_cell": "88b2c55697fffff",
+        "comuna": "Providencia",
+        "demand": 29
+      },
+      {
+        "h3_cell": "88b2c55403fffff",
+        "comuna": "Santiago Centro",
+        "demand": 24
+      },
+      {
+        "h3_cell": "88b2c55439fffff",
+        "comuna": "Santiago Centro",
+        "demand": 15
+      }
+    ],
+    "real_kontur_raw": [
+      {
+        "h3_cell": "88b2c54295fffff",
+        "comuna": "Maipú",
+        "demand": 11
+      },
+      {
+        "h3_cell": "88b2c5476dfffff",
+        "comuna": "Maipú",
+        "demand": 10
+      },
+      {
+        "h3_cell": "88b2c54293fffff",
+        "comuna": "Maipú",
+        "demand": 10
+      }
+    ],
+    "real_census_calibrated": [
+      {
+        "h3_cell": "88b2c55411fffff",
+        "comuna": "Santiago Centro",
+        "demand": 14
+      },
+      {
+        "h3_cell": "88b2c554c1fffff",
+        "comuna": "Santiago Centro",
+        "demand": 13
+      },
+      {
+        "h3_cell": "88b2c554cdfffff",
+        "comuna": "Santiago Centro",
+        "demand": 13
+      }
+    ]
+  },
+  "circuity": {
+    "pairs": 86142,
+    "all": {
+      "10": 1.205,
+      "50": 1.383,
+      "90": 1.664
+    },
+    "intra_comuna": {
+      "10": 1.195,
+      "50": 1.421,
+      "90": 1.954
+    },
+    "inter_comuna": {
+      "10": 1.208,
+      "50": 1.376,
+      "90": 1.602
+    },
+    "simulated_intra_range": [
+      1.15,
+      1.35
+    ],
+    "simulated_inter_range": [
+      1.25,
+      1.55
+    ],
+    "share_below_simulated_minimum": 0.0437,
+    "share_above_simulated_maximum": 0.1873,
+    "asymmetry_median_pct": 3.97,
+    "histogram": {
+      "edges": [
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.25,
+        1.3,
+        1.35,
+        1.4,
+        1.45,
+        1.5,
+        1.55,
+        1.6,
+        1.65,
+        1.7,
+        1.75,
+        1.8,
+        1.85,
+        1.9,
+        1.95,
+        2.0,
+        2.05,
+        2.1,
+        2.15,
+        2.2,
+        2.25,
+        2.3,
+        2.35,
+        2.4,
+        2.45,
+        2.5,
+        2.55,
+        2.6,
+        2.65,
+        2.7,
+        2.75,
+        2.8,
+        2.85,
+        2.9,
+        2.95,
+        3.0
+      ],
+      "counts": [
+        158,
+        1081,
+        2529,
+        4263,
+        7026,
+        9314,
+        10748,
+        11929,
+        10221,
+        7480,
+        5256,
+        3970,
+        2857,
+        2094,
+        1521,
+        1081,
+        842,
+        661,
+        452,
+        351,
+        291,
+        223,
+        181,
+        141,
+        128,
+        112,
+        110,
+        84,
+        77,
+        71,
+        70,
+        49,
+        45,
+        41,
+        49,
+        41,
+        39,
+        37,
+        28,
+        491
+      ]
+    }
+  },
+  "routing": {
+    "synthetic_demand_simulated_roads": {
+      "repeats": [
+        {
+          "feasible": true,
+          "total_km": 503.897,
+          "vehicles_used": 8,
+          "dropped": 0,
+          "by_depot": [
+            {
+              "depot_index": 0,
+              "depot_label": "Providencia (29)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 124.731,
+              "total_load": 394,
+              "n_stops": 63
+            },
+            {
+              "depot_index": 1,
+              "depot_label": "Santiago Centro (24)",
+              "n_vehicles_used": 2,
+              "total_distance_km": 153.217,
+              "total_load": 299,
+              "n_stops": 60
+            },
+            {
+              "depot_index": 2,
+              "depot_label": "Santiago Centro (15)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 225.949,
+              "total_load": 264,
+              "n_stops": 47
+            }
+          ]
+        },
+        {
+          "feasible": true,
+          "total_km": 503.897,
+          "vehicles_used": 8,
+          "dropped": 0,
+          "by_depot": [
+            {
+              "depot_index": 0,
+              "depot_label": "Providencia (29)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 124.731,
+              "total_load": 394,
+              "n_stops": 63
+            },
+            {
+              "depot_index": 1,
+              "depot_label": "Santiago Centro (24)",
+              "n_vehicles_used": 2,
+              "total_distance_km": 153.217,
+              "total_load": 299,
+              "n_stops": 60
+            },
+            {
+              "depot_index": 2,
+              "depot_label": "Santiago Centro (15)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 225.949,
+              "total_load": 264,
+              "n_stops": 47
+            }
+          ]
+        },
+        {
+          "feasible": true,
+          "total_km": 503.897,
+          "vehicles_used": 8,
+          "dropped": 0,
+          "by_depot": [
+            {
+              "depot_index": 0,
+              "depot_label": "Providencia (29)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 124.731,
+              "total_load": 394,
+              "n_stops": 63
+            },
+            {
+              "depot_index": 1,
+              "depot_label": "Santiago Centro (24)",
+              "n_vehicles_used": 2,
+              "total_distance_km": 153.217,
+              "total_load": 299,
+              "n_stops": 60
+            },
+            {
+              "depot_index": 2,
+              "depot_label": "Santiago Centro (15)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 225.949,
+              "total_load": 264,
+              "n_stops": 47
+            }
+          ]
+        }
+      ],
+      "total_km": 503.897,
+      "total_km_range": [
+        503.897,
+        503.897
+      ],
+      "vehicles_used": 8.0,
+      "vehicles_used_range": [
+        8.0,
+        8.0
+      ],
+      "dropped": 0.0,
+      "dropped_range": [
+        0.0,
+        0.0
+      ]
+    },
+    "real_demand_simulated_roads": {
+      "repeats": [
+        {
+          "feasible": true,
+          "total_km": 572.042,
+          "vehicles_used": 8,
+          "dropped": 0,
+          "by_depot": [
+            {
+              "depot_index": 0,
+              "depot_label": "Santiago Centro (14)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 250.037,
+              "total_load": 348,
+              "n_stops": 97
+            },
+            {
+              "depot_index": 1,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 224.112,
+              "total_load": 405,
+              "n_stops": 140
+            },
+            {
+              "depot_index": 2,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 2,
+              "total_distance_km": 97.893,
+              "total_load": 232,
+              "n_stops": 54
+            }
+          ],
+          "driven_on_real_roads_km": 835.3480999999999
+        },
+        {
+          "feasible": true,
+          "total_km": 577.784,
+          "vehicles_used": 8,
+          "dropped": 0,
+          "by_depot": [
+            {
+              "depot_index": 0,
+              "depot_label": "Santiago Centro (14)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 247.056,
+              "total_load": 344,
+              "n_stops": 95
+            },
+            {
+              "depot_index": 1,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 223.005,
+              "total_load": 397,
+              "n_stops": 138
+            },
+            {
+              "depot_index": 2,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 2,
+              "total_distance_km": 107.723,
+              "total_load": 244,
+              "n_stops": 58
+            }
+          ],
+          "driven_on_real_roads_km": 841.1257999999998
+        },
+        {
+          "feasible": true,
+          "total_km": 568.324,
+          "vehicles_used": 8,
+          "dropped": 0,
+          "by_depot": [
+            {
+              "depot_index": 0,
+              "depot_label": "Santiago Centro (14)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 247.382,
+              "total_load": 347,
+              "n_stops": 96
+            },
+            {
+              "depot_index": 1,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 222.465,
+              "total_load": 402,
+              "n_stops": 138
+            },
+            {
+              "depot_index": 2,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 2,
+              "total_distance_km": 98.476,
+              "total_load": 236,
+              "n_stops": 57
+            }
+          ],
+          "driven_on_real_roads_km": 831.7076999999998
+        }
+      ],
+      "total_km": 572.042,
+      "total_km_range": [
+        568.324,
+        577.784
+      ],
+      "driven_on_real_roads_km": 835.3480999999999,
+      "driven_on_real_roads_km_range": [
+        831.7076999999998,
+        841.1257999999998
+      ],
+      "vehicles_used": 8.0,
+      "vehicles_used_range": [
+        8.0,
+        8.0
+      ],
+      "dropped": 0.0,
+      "dropped_range": [
+        0.0,
+        0.0
+      ]
+    },
+    "real_demand_real_roads": {
+      "repeats": [
+        {
+          "feasible": true,
+          "total_km": 728.5,
+          "vehicles_used": 9,
+          "dropped": 0,
+          "by_depot": [
+            {
+              "depot_index": 0,
+              "depot_label": "Santiago Centro (14)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 252.845,
+              "total_load": 285,
+              "n_stops": 88
+            },
+            {
+              "depot_index": 1,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 254.163,
+              "total_load": 310,
+              "n_stops": 110
+            },
+            {
+              "depot_index": 2,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 221.491,
+              "total_load": 390,
+              "n_stops": 93
+            }
+          ]
+        },
+        {
+          "feasible": true,
+          "total_km": 720.65,
+          "vehicles_used": 9,
+          "dropped": 0,
+          "by_depot": [
+            {
+              "depot_index": 0,
+              "depot_label": "Santiago Centro (14)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 251.109,
+              "total_load": 281,
+              "n_stops": 86
+            },
+            {
+              "depot_index": 1,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 254.68,
+              "total_load": 323,
+              "n_stops": 112
+            },
+            {
+              "depot_index": 2,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 214.86,
+              "total_load": 381,
+              "n_stops": 93
+            }
+          ]
+        },
+        {
+          "feasible": true,
+          "total_km": 739.897,
+          "vehicles_used": 9,
+          "dropped": 0,
+          "by_depot": [
+            {
+              "depot_index": 0,
+              "depot_label": "Santiago Centro (14)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 246.453,
+              "total_load": 274,
+              "n_stops": 84
+            },
+            {
+              "depot_index": 1,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 254.68,
+              "total_load": 323,
+              "n_stops": 112
+            },
+            {
+              "depot_index": 2,
+              "depot_label": "Santiago Centro (13)",
+              "n_vehicles_used": 3,
+              "total_distance_km": 238.763,
+              "total_load": 388,
+              "n_stops": 95
+            }
+          ]
+        }
+      ],
+      "total_km": 728.5,
+      "total_km_range": [
+        720.65,
+        739.897
+      ],
+      "vehicles_used": 9.0,
+      "vehicles_used_range": [
+        9.0,
+        9.0
+      ],
+      "dropped": 0.0,
+      "dropped_range": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "forecast": {
+    "target": "census-calibrated population per H3 cell",
+    "cells": 512,
+    "random_75_25_split": {
+      "ridge_baseline": {
+        "mae": 2261.4824,
+        "rmse": 2912.8575,
+        "r2": 0.3781
+      },
+      "random_forest": {
+        "mae": 1279.8613,
+        "rmse": 1890.2384,
+        "r2": 0.7381
+      },
+      "mlp_relu": {
+        "mae": 2781.6225,
+        "rmse": 3195.3478,
+        "r2": 0.2516
+      },
+      "mlp_gelu": {
+        "mae": 2329.628,
+        "rmse": 2858.4039,
+        "r2": 0.4011
+      },
+      "mlp_swish": {
+        "mae": 2155.0804,
+        "rmse": 2779.104,
+        "r2": 0.4339
+      }
+    },
+    "cross_validation": {
+      "random_folds": {
+        "ridge": 0.3924,
+        "random_forest": 0.7171
+      },
+      "spatial_blocks": {
+        "ridge": -0.2977,
+        "random_forest": -0.1759
+      },
+      "n_blocks": 29
+    }
+  },
+  "elapsed_seconds": 556.2
+}
