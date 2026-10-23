@@ -61,6 +61,24 @@
 <img src="figures/demand_actual_vs_predicted.png" alt="Actual vs predicted" loading="lazy">
 <figcaption><strong>Honest note on forecasting accuracy</strong>: R² near zero across all five models is the correct, un-massaged result here — <code>total_demand</code> in the synthetic generator is drawn independently of location (<code>rng.randint(min_demand, max_demand)</code> per order, uncorrelated with comuna or coordinates by construction), so there is little real spatial signal to learn from location alone.</figcaption>
 </figure>
+<h2>6.2 Phase 4: real demand and real roads</h2>
+<p>The pipeline on resident population per H3 cell (Kontur Population 2023, rescaled to the Censo 2017 comuna totals it misses by &minus;62% in Santiago Centro and +83% in Maip&uacute;) and on OSRM driving distances over OpenStreetMap.</p>
+<figure>
+<img src="figures/real_demand_maps.png" alt="Demand under each model and the depots it picks" loading="lazy">
+<figcaption>The same 1,025 units of demand placed three ways: the top-demand depots sit in Providencia and Santiago Centro on synthetic demand, all in Maip&uacute; on Kontur as published, all in Santiago Centro once rescaled to the census.</figcaption>
+</figure>
+<figure>
+<img src="figures/real_circuity.png" alt="Real circuity against the simulated ranges" loading="lazy">
+<figcaption>Real detours have a median of 1.38 but a heavy tail: 19% of pairs exceed the simulated maximum of 1.55, and the detour is larger inside a comuna than across comunas, the opposite of the simulator.</figcaption>
+</figure>
+<figure>
+<img src="figures/real_routing_km.png" alt="Route length under each combination" loading="lazy">
+<figcaption>A plan built on the simulated distances is 46% longer once driven on real roads (835 against 572 km); planning on the real distances brings it to 728.5 km.</figcaption>
+</figure>
+<figure>
+<img src="figures/real_forecast_cv.png" alt="R2 under random and spatial cross-validation" loading="lazy">
+<figcaption>Location predicts real population under random folds (Random Forest R&sup2; 0.72) only by copying neighbours: with whole neighbourhoods held out it falls to &minus;0.18.</figcaption>
+</figure>
 <footer>
 Pablo Reyes · <a href="https://github.com/Rxyxs/chile-spatial-logistics-opt">github.com/Rxyxs/chile-spatial-logistics-opt</a> · MIT<br><br>
 Every figure on this page is produced by the repository's pipeline. For the full method and its limitations, see the README.
