@@ -11,7 +11,7 @@
 ![Jupyter](https://img.shields.io/badge/Jupyter-2%20notebooks-F37626?style=flat&logo=jupyter&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-MLP%20%2B%20custom%20loss-EE4C2C?style=flat&logo=pytorch&logoColor=white)
 ![DuckDB](https://img.shields.io/badge/DuckDB-metrics%20store-FFF000?style=flat&logo=duckdb&logoColor=black)
-![Tests](https://img.shields.io/badge/tests-55%20passing-brightgreen?style=flat&logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-63%20passing-brightgreen?style=flat&logo=pytest&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 Geospatial intelligence system for **Dark Store** siting and **last-mile delivery** route optimization in Santiago, Chile's Metropolitan Region.
@@ -20,7 +20,9 @@ Geospatial intelligence system for **Dark Store** siting and **last-mile deliver
 
 **Phase 2** replaces three of Phase 1's own documented simplifications with the real thing: real comuna polygons instead of circles, a simulated road-network distance matrix instead of straight-line distance, and a genuine multi-depot VRPTW solved jointly instead of one depot at a time — plus standalone HTML map export (Folium + Pydeck) and a companion evaluation notebook.
 
-**Phase 3** (this update) adds a **demand-forecasting module** as an upstream input to the siting/routing decision, not a replacement for it: given only a candidate H3 cell's comuna and centroid coordinates (the information available for a site that has no order history yet), predict its expected demand. Three approaches are compared — a Ridge regression baseline, a Random Forest ensemble, and a PyTorch MLP trained with a custom asymmetric loss (penalizing under-prediction more than over-prediction, since a Dark Store stockout is costlier than idle capacity) — across three activation functions (ReLU, GELU, Swish/SiLU). Metrics are persisted to DuckDB and the comparison plots are versioned in `outputs/plots/`.
+**Phase 4** (this update) runs the pipeline on real demand (population per H3 cell, Kontur rescaled to Censo 2017) and real roads (OSRM): a plan built on the simulated distances is 46% longer once driven, and the depots move to a different comuna depending on the population source — see §6.2.
+
+**Phase 3** adds a **demand-forecasting module** as an upstream input to the siting/routing decision, not a replacement for it: given only a candidate H3 cell's comuna and centroid coordinates (the information available for a site that has no order history yet), predict its expected demand. Three approaches are compared — a Ridge regression baseline, a Random Forest ensemble, and a PyTorch MLP trained with a custom asymmetric loss (penalizing under-prediction more than over-prediction, since a Dark Store stockout is costlier than idle capacity) — across three activation functions (ReLU, GELU, Swish/SiLU). Metrics are persisted to DuckDB and the comparison plots are versioned in `outputs/plots/`.
 
 ## 0.1 Business Impact & Key Performance Indicators
 
@@ -30,7 +32,7 @@ Geospatial intelligence system for **Dark Store** siting and **last-mile deliver
 | Fleet utilization | 8 / 9 vehicles used | Total simulated route distance: 503.90 km |
 | Haversine distance-matrix speedup | **28.7x** (43.49ms → 1.51ms) | Vectorized NumPy vs. pure-Python loop, measured not claimed |
 | Real comuna polygons | 5 comunas, 225 demand points | Rejection-sampled so every point genuinely falls inside its real polygon, not a bounding box |
-| Test suite | 55/55 passing | Grown from Phase 1's 13 tests to cover polygon containment, network-distance invariants, multi-depot assignment, and demand forecasting |
+| Test suite | 63/63 passing | Grown from Phase 1's 13 tests to cover polygon containment, network-distance invariants, multi-depot assignment, and demand forecasting |
 | Demand forecast, best model MAE | 2.87 (Ridge) | Predicts H3-cell demand from location only, as an input to depot-siting candidate ranking |
 
 ## 1. Architecture
@@ -202,11 +204,59 @@ The animated version below traces the loss curves epoch by epoch, with a floatin
 
 **Honest note on depot selection**: 2 of the 3 top-demand H3 cells selected as depot candidates both fall within Santiago Centro (different specific locations, same comuna) — a real, un-forced result of picking the highest-demand cells rather than one-per-comuna by design. It's a realistic outcome for a dense urban core (multiple dark stores in the same comuna is a legitimate operating model), not a bug, and not smoothed over into an artificially "diverse" example.
 
+### 6.2 Phase 4: real demand and real roads
+
+Everything above rests on two simulated inputs: demand drawn uniformly inside each comuna (location carries no information about it, which is why the forecasts in 6.1 score R² ≈ 0) and road distances simulated as straight-line distance times a random circuity factor. `python -m src.real_santiago` swaps each for a real one and measures what changes. Every number below is from that run (OR-Tools stops on a 60-second limit, so each routing scenario is solved 3 times and the median is reported, with the range).
+
+**Real demand.** Resident population per H3 resolution-8 cell (the grid this repo already uses) from **Kontur Population 2023** (HDX, CC BY 4.0), keeping the synthetic run's 1,025 units so the scenarios differ only in where demand sits. Kontur's own comuna totals disagree with **Censo 2017** (INE) for these five comunas:
+
+| Comuna | Kontur | Censo 2017 | Kontur vs. census |
+|---|---:|---:|---:|
+| Santiago Centro | 154,765 | 404,495 | **−62%** |
+| Maipú | 956,350 | 521,627 | **+83%** |
+| San Bernardo | 358,666 | 301,313 | +19% |
+| Providencia | 129,962 | 142,079 | −9% |
+| Las Condes | 297,424 | 294,838 | +1% |
+
+Its building-footprint model puts too few people in Santiago Centro's towers and too many in Maipú's low-rise sprawl. So each comuna's cells keep Kontur's distribution but are rescaled to the census total.
+
+![Demand under each model and the depots it picks](outputs/plots/real_demand_maps.png)
+
+**Where the depots go depends on the data.** The rule (`select_dark_store_candidates`: the three highest-demand cells) puts them in Providencia and Santiago Centro on the synthetic demand, **all three in Maipú** on Kontur as published, and **all three in Santiago Centro** once rescaled to the census. The synthetic generator gives every comuna about a fifth of the demand; real population gives Maipú 31% and Providencia 9%. The siting rule itself is the next weakness: three depots within a couple of kilometres of each other is what "top-N cells" does on a dense core, and is why facility location stays in Future work.
+
+**Real roads.** OSRM driving distances on OpenStreetMap (public demo server, car profile), 86,142 location pairs:
+
+![Real circuity against the simulated ranges](outputs/plots/real_circuity.png)
+
+The median detour is 1.38, inside the simulated band, but the tail is not: 19% of pairs exceed the simulator's maximum of 1.55, and the detour is *larger* inside a comuna (median 1.42) than across comunas (1.38), the opposite of what the simulator assumes. Real distances are also asymmetric (median 4% between directions; one-way streets).
+
+![Route length under each combination](outputs/plots/real_routing_km.png)
+
+| Scenario | Route length, km (median of 3, range) | Vehicles |
+|---|---:|---:|
+| Synthetic demand, simulated roads (the notebook) | 503.9 | 8 |
+| Real demand, simulated roads: the plan | 572 [568, 578] | 8 |
+| The same plan driven on real roads | **835** [832, 841] | 8 |
+| Real demand, planned on real roads | 728.5 [721, 740] | 9 |
+
+A plan built on the simulated matrix is **46% longer once driven**, and planning on the real matrix instead saves 13% of that driven distance. The simulated factor understates both the length of the routes and the value of optimizing on the right distances.
+
+**Forecasting real demand from location.** The same models now have spatial structure to learn, and whether they learned it depends on how they are tested:
+
+![R2 under random and spatial cross-validation](outputs/plots/real_forecast_cv.png)
+
+| Model | Random 5-fold R² | Whole neighbourhoods held out (29 H3 resolution-6 blocks) |
+|---|---:|---:|
+| Ridge | 0.39 | −0.30 |
+| Random Forest | 0.72 | −0.18 |
+
+Random folds put each cell's neighbours in training, so the forest interpolates and looks good. Asked about a neighbourhood it has not seen, which is the question a new dark-store candidate actually poses, it does worse than predicting the mean. Coordinates and comuna are not enough; census or land-use covariates would be the next input.
+
 ## 7. Data sources
 
 - **Real comuna polygons**: `data/raw/comunas_rm_subset.geojson`, filtered from a public GitHub mirror of the Metropolitan Region's official communal boundaries (ultimately Chile's INE/SII cartographic base): [caracena/chile-geojson](https://github.com/caracena/chile-geojson), file `13.geojson` (region 13 = Región Metropolitana). No explicit license is stated on that mirror; the underlying administrative-boundary data itself is Chilean public information. See `src/spatial/comunas.py` for the fetch/filter script used to regenerate this file from source.
-- **Road-network distances**: simulated, not a live OSRM query — see §2. Disclosed explicitly, not presented as real routing-engine output.
-- **Demand and orders**: fully synthetic (own generator, seeded, deterministic).
+- **Road-network distances**: simulated in Phases 1-3 (see §2). Phase 4 compares them with real driving distances from the public OSRM demo server (router.project-osrm.org, © OpenStreetMap contributors, ODbL), cached in `data/raw/osrm/` (gitignored).
+- **Demand and orders**: synthetic in Phases 1-3 (own generator, seeded, deterministic). Phase 4 uses resident population: Kontur Population 2023-11-01, H3 resolution 8 ([HDX](https://data.humdata.org/dataset/kontur-population-chile), CC BY 4.0), rescaled to the INE Censo 2017 comuna totals.
 
 ## 8. Testing
 
@@ -214,15 +264,15 @@ The animated version below traces the loss curves epoch by epoch, with a floatin
 pytest -v
 ```
 
-55 tests: real-polygon integrity (validity, CRS, plausible bounds), point-in-real-polygon clipping correctness (every generated point verified via spatial join to be inside its assigned comuna, not just its bounding box), vectorized-vs-loop Haversine numerical equivalence, road-network-distance physical invariants (never shorter than straight-line, symmetric, deterministic given a seed, higher circuity for inter-zone trips on average), multi-depot instance validation (rejects nonzero depot demand, mismatched vehicle/depot counts, wrong-shaped distance matrices), multi-depot solution correctness (every route starts and ends at its own depot, nearby demand is served by the nearby depot, per-depot summaries sum to the solution total), map-export smoke tests (both Folium and Pydeck HTML files are created with real content), demand-forecast feature/metric correctness (no leakage of `order_count`, MAE/RMSE/R² sanity on a perfect prediction), the asymmetric loss actually penalizing under-prediction more than over-prediction, MLP training loss decreasing across all 3 activations, DuckDB metrics persistence (including idempotent overwrite on rerun of the same `run_label`), and plot-generation smoke tests for all 3 demand-forecast figures.
+63 tests: real-polygon integrity (validity, CRS, plausible bounds), point-in-real-polygon clipping correctness (every generated point verified via spatial join to be inside its assigned comuna, not just its bounding box), vectorized-vs-loop Haversine numerical equivalence, road-network-distance physical invariants (never shorter than straight-line, symmetric, deterministic given a seed, higher circuity for inter-zone trips on average), multi-depot instance validation (rejects nonzero depot demand, mismatched vehicle/depot counts, wrong-shaped distance matrices), multi-depot solution correctness (every route starts and ends at its own depot, nearby demand is served by the nearby depot, per-depot summaries sum to the solution total), map-export smoke tests (both Folium and Pydeck HTML files are created with real content), demand-forecast feature/metric correctness (no leakage of `order_count`, MAE/RMSE/R² sanity on a perfect prediction), the asymmetric loss actually penalizing under-prediction more than over-prediction, MLP training loss decreasing across all 3 activations, DuckDB metrics persistence (including idempotent overwrite on rerun of the same `run_label`), and plot-generation smoke tests for all 3 demand-forecast figures.
 
 ## 9. Future work
 
 - Facility-location optimization for *where* to place depot candidates (not just which top-demand H3 cells to pick), jointly with the routing decision.
 - Feed `demand_forecast.py`'s predicted demand directly into `select_dark_store_candidates`, so un-sampled H3 cells can be ranked as depot candidates without waiting for real order history.
-- Demand data with genuine spatial structure (comuna-level income/population, transit proximity, seasonality) to give the model comparison a real accuracy gap to demonstrate, not just a methodology one.
+- Covariates that generalise to unseen neighbourhoods (census block data, land use, transit), since §6.2 shows location alone does not.
 - Persist optimization scenarios and compare metrics across runs.
-- A real OSRM instance (Docker + a Santiago `.osm.pbf` extract) as a drop-in replacement for the simulated road-network matrix, behind the same `distance_matrix_km` interface `multi_depot_vrp.py` already expects.
+- A self-hosted OSRM instance (Docker + a Santiago `.osm.pbf` extract) instead of the public demo server used in §6.2, as the default matrix, behind the same `distance_matrix_km` interface `multi_depot_vrp.py` already expects.
 - Extend the multi-depot dashboard (Streamlit) to match the notebook's capabilities, not just the single-depot Phase 1 UI.
 
 ## License

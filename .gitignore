@@ -38,6 +38,11 @@ outputs/plots/*.gif
 !outputs/plots/mlp_activation_convergence.png
 !outputs/plots/demand_actual_vs_predicted.png
 !outputs/plots/mlp_activation_convergence_animated.gif
+# Fase 4 (datos reales): los cuatro graficos que usa el README
+!outputs/plots/real_demand_maps.png
+!outputs/plots/real_circuity.png
+!outputs/plots/real_routing_km.png
+!outputs/plots/real_forecast_cv.png
 
 # Base DuckDB de metricas (regenerable, local)
 outputs/metrics/*.duckdb
